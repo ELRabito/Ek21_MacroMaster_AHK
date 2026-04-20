@@ -7,6 +7,7 @@ Powerful Autohotkey script to convert any VIA/QMK programmable Numpad into a pow
 # Epomaker Ek21 Setup
 
 The Auhothotkey (https://www.autohotkey.com/) script listens to the Shift + F function key combos (F13-F21) and F23 and F24 as layer modifier.
+Just remap the buttons via the ANY feature of VIA/QMK and insert the keycodes for each button (https://docs.keeb.io/via)
   
     S(KC_F13)
     S(KC_F14)
