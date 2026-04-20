@@ -1,5 +1,5 @@
 # Work in Progress (This script is not yet 100% feature complete)
-Powerful Autohotkey script to convert any VIA programmable Numpad into a powerful Macropad. 
+Powerful Autohotkey script to convert any VIA/QMK programmable Numpad into a powerful Macropad. 
 
 # Current functions
 <img width="730" height="818" alt="grafik" src="https://github.com/user-attachments/assets/72f8dd19-ecae-40d1-b08e-39eb6507da9f" />
