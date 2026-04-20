@@ -1,5 +1,5 @@
 # Work in Progress
-This script is not yet fulley done.
+This script is not yet 100% feature complete.
 
 # Current functions
 <img width="730" height="818" alt="grafik" src="https://github.com/user-attachments/assets/72f8dd19-ecae-40d1-b08e-39eb6507da9f" />
