@@ -189,8 +189,13 @@ $+F17:: ; Filter Explorer (Current Window Priority)
     {
         WinActivate "ahk_class CabinetWClass"
         if WinWaitActive("ahk_class CabinetWClass", , 1) {
-            Send "{f3}"
-            Sleep 200
+            Send "{f3}" ; Focus search box
+            Sleep 300   ; Wait for UI to react
+            
+            ; --- CLEAR INPUT FIELD ---
+            Send "^a{BackSpace}" 
+            Sleep 100
+            
             if (A_Clipboard != "") {
                 Send "^v{Enter}"
                 FlashHUD("FILTERING CURRENT WINDOW", "0078D7")
@@ -204,9 +209,14 @@ $+F17:: ; Filter Explorer (Current Window Priority)
         Run "explorer.exe"
         if WinWaitActive("ahk_class CabinetWClass", , 2) {
             Sleep 600
+            Send "{f3}"
+            Sleep 200
+            
+            ; --- CLEAR INPUT FIELD ---
+            Send "^a{BackSpace}"
+            Sleep 50
+            
             if (A_Clipboard != "") {
-                Send "{f3}"
-                Sleep 200
                 Send "^v{Enter}"
                 FlashHUD("OPEN & FILTER", "0078D7")
             }
