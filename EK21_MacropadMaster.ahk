@@ -7,6 +7,7 @@
 
 ; Defines
 global margin := 7
+global taskbarHeight := 40 ; Standard Windows Taskbar
 InstallKeybdHook
 SetTitleMatchMode 2
 #UseHook
@@ -16,10 +17,10 @@ HUD := Gui("+AlwaysOnTop -Caption +ToolWindow")
 HUD.SetFont("s10 w700 cWhite", "Segoe UI")
 HUDText := HUD.Add("Text", "Center w220", "")
 guiWidth := 220
-xPos := (A_ScreenWidth / 2) - (guiWidth / 2)
 
 ; Modifier HUD
 ShowHUD(txt, color) {
+    xPos := (A_ScreenWidth / 2) - (110) ; Dynamisch zentriert
     HUD.BackColor := color
     HUDText.Value := txt
     HUD.Show("x" xPos " y0 w" guiWidth " NoActivate")
@@ -27,10 +28,11 @@ ShowHUD(txt, color) {
 
 ; Feedback HUD
 FlashHUD(txt, color) {
+    xPos := (A_ScreenWidth / 2) - (110)
     HUD.BackColor := color
     HUDText.Value := txt
     HUD.Show("x" xPos " y0 w" guiWidth " NoActivate")
-    SetTimer () => HUD.Hide(), -1000 ; Dissapears after 1 second
+    SetTimer () => HUD.Hide(), -1000 
 }
 
 ; ##########################################
@@ -42,8 +44,9 @@ FlashHUD(txt, color) {
 ; Shift + F13: Snap LEFT Half
 $+F13::
 {
+    halfW := A_ScreenWidth / 2 ; Aktuellen Wert holen
     WinRestore "A"
-    WinMove -margin, 0, 1280 + (2 * margin), A_ScreenHeight - 40, "A"
+    WinMove -margin, 0, halfW + (2 * margin), A_ScreenHeight - taskbarHeight, "A"
     FlashHUD("SNAP: LEFT HALF", "2D2D2D")
 }
 
@@ -57,8 +60,9 @@ $+F14::
 ; Shift + F15: Snap RIGHT Half
 $+F15::
 {
+    halfW := A_ScreenWidth / 2
     WinRestore "A"
-    WinMove 1280 - margin, 0, 1280 + (2 * margin), A_ScreenHeight - 40, "A"
+    WinMove halfW - margin, 0, halfW + (2 * margin), A_ScreenHeight - taskbarHeight, "A"
     FlashHUD("SNAP: RIGHT HALF", "2D2D2D")
 }
 
@@ -148,22 +152,25 @@ $+F21::
 
 $+F13:: ; Snap LEFT Third
 {
+    thirdW := A_ScreenWidth / 3
     WinRestore "A"
-    WinMove -margin, 0, 853 + (2 * margin), A_ScreenHeight - 40, "A"
+    WinMove -margin, 0, thirdW + (2 * margin), A_ScreenHeight - taskbarHeight, "A"
     FlashHUD("SNAP: LEFT THIRD", "005A9E")
 }
 
 $+F14:: ; Snap CENTER Third
 {
+    thirdW := A_ScreenWidth / 3
     WinRestore "A"
-    WinMove 853 - margin, 0, 854 + (2 * margin), A_ScreenHeight - 40, "A"
+    WinMove thirdW - margin, 0, thirdW + (2 * margin), A_ScreenHeight - taskbarHeight, "A"
     FlashHUD("SNAP: CENTER THIRD", "005A9E")
 }
 
 $+F15:: ; Snap RIGHT Third
 {
+    thirdW := A_ScreenWidth / 3
     WinRestore "A"
-    WinMove 1707 - margin, 0, 853 + (2 * margin), A_ScreenHeight - 40, "A"
+    WinMove (2 * thirdW) - margin, 0, thirdW + (2 * margin), A_ScreenHeight - taskbarHeight, "A"
     FlashHUD("SNAP: RIGHT THIRD", "005A9E")
 }
 
@@ -190,7 +197,7 @@ $+F17:: ; Filter Explorer (Current Window Priority)
         WinActivate "ahk_class CabinetWClass"
         if WinWaitActive("ahk_class CabinetWClass", , 1) {
             Send "{f3}" ; Focus search box
-            Sleep 300   ; Wait for UI to react
+            Sleep 200   ; Wait for UI to react
             
             ; --- CLEAR INPUT FIELD ---
             Send "^a{BackSpace}" 
@@ -208,9 +215,9 @@ $+F17:: ; Filter Explorer (Current Window Priority)
     {
         Run "explorer.exe"
         if WinWaitActive("ahk_class CabinetWClass", , 2) {
-            Sleep 600
+            Sleep 300
             Send "{f3}"
-            Sleep 200
+            Sleep 100
             
             ; --- CLEAR INPUT FIELD ---
             Send "^a{BackSpace}"
@@ -246,22 +253,29 @@ $+F18:: ; Smart YouTube
 
 #HotIf GetKeyState("F24", "P")
 
-$+F13:: ; Center 1600x900
+$+F13:: ; Center Large (75% of screen)
 {
+    w := A_ScreenWidth * 0.75
+    h := A_ScreenHeight * 0.75
     WinRestore "A"
-    WinMove (A_ScreenWidth-1600)/2, (A_ScreenHeight-900)/2, 1600, 900, "A"
-    FlashHUD("MODE: CENTER 1600p", "D4A017")
+    WinMove (A_ScreenWidth-w)/2, (A_ScreenHeight-h)/2, w, h, "A"
+    FlashHUD("MODE: CENTER 75%", "D4A017")
 }
 
-$+F14:: ; Focus Mode (Large Center)
+$+F14:: ; Focus Mode (90% of screen)
 {
+    w := A_ScreenWidth * 0.90
+    h := A_ScreenHeight * 0.90
     WinRestore "A"
-    WinMove (A_ScreenWidth-2000)/2, (A_ScreenHeight-1200)/2, 2000, 1200, "A"
-    FlashHUD("MODE: FOCUS 2000p", "D4A017")
+    WinMove (A_ScreenWidth-w)/2, (A_ScreenHeight-h)/2, w, h, "A"
+    FlashHUD("MODE: FOCUS 90%", "D4A017")
 }
 
-$+F15:: ; Picture-in-Picture Toggle
+; PiP Toggle (Dynamic Position)
+$+F15::
 {
+    pipW := A_ScreenWidth * 0.25
+    pipH := A_ScreenHeight * 0.25
     ExStyle := WinGetExStyle("A")
     if (ExStyle & 0x8) {
         WinSetAlwaysOnTop 0, "A"
@@ -270,7 +284,7 @@ $+F15:: ; Picture-in-Picture Toggle
     } else {
         WinRestore "A"
         WinSetAlwaysOnTop 1, "A"
-        WinMove A_ScreenWidth-650, A_ScreenHeight-400-40, 650, 400, "A"
+        WinMove A_ScreenWidth-pipW, A_ScreenHeight-pipH-taskbarHeight, pipW, pipH, "A"
         FlashHUD("PiP: ON", "D4A017")
     }
 }
