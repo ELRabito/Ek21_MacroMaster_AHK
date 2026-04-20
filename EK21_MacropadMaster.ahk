@@ -231,7 +231,21 @@ $+F18:: ; Smart YouTube
         Run "firefox.exe https://www.youtube.com"
 }
 
-; 3 Keys left
+; --- EMPTY SLOTS LAYER 2 ---
+$+F19::
+{
+    FlashHUD("EMPTY", "8B0000")
+}
+
+$+F20::
+{
+    FlashHUD("EMPTY", "8B0000")
+}
+
+$+F21::
+{
+    FlashHUD("EMPTY", "8B0000")
+}
 
 #HotIf
 
@@ -316,7 +330,21 @@ $+F18:: ; Copy Current Explorer Path
     }
 }
 
-; 3 Keys left
+; --- EMPTY SLOTS LAYER 3 ---
+$+F19::
+{
+    FlashHUD("EMPTY", "8B0000")
+}
+
+$+F20::
+{
+    FlashHUD("EMPTY", "8B0000")
+}
+
+$+F21::
+{
+    FlashHUD("EMPTY", "8B0000")
+}
 
 #HotIf
 
