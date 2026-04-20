@@ -1,6 +1,6 @@
 ; ##########################################
 ; ##########################################
-; MACROPAD MASTER SCRIPT - ULTRA EDITION (v2.1)
+; MACROPAD MASTER SCRIPT - ULTRA EDITION (v2.3)
 ; Modifiers: Shift (via VIA), F23 (Phys.), F24 (Phys.)
 ; ##########################################
 ; ##########################################
@@ -12,29 +12,64 @@ SetTitleMatchMode 2
 
 ; --- DEFINES ---
 global margin := 7
-global taskbarHeight := 40 
-global guiWidth := 220
+global taskbarHeight := 40
+
+; ##########################################
+; HUD SYSTEM - COMPACT DYNAMIC VERSION
+; ##########################################
 
 ; --- HUD INIT ---
-HUD := Gui("+AlwaysOnTop -Caption +ToolWindow")
-HUD.SetFont("s10 w700 cWhite", "Segoe UI")
-HUDText := HUD.Add("Text", "Center w220", "")
+global HUD := Gui("+AlwaysOnTop -Caption +ToolWindow")
+HUD.SetFont("s12 w700 cWhite", "Bahnschrift")
+; Initialize with Center alignment and no word wrap
+global HUDText := HUD.Add("Text", "Center -Wrap", "") 
+global isFlashing := false
+global padding := 60 ; Horizontal breathing room for text
 
-; Modifier HUD
-ShowHUD(txt, color) {
-    xPos := (A_ScreenWidth / 2) - (guiWidth / 2)
+UpdateHUD(txt, color) {
+    global HUD, HUDText, padding
+    
+    ; 1. VIRTUAL MEASUREMENT
+    tempGui := Gui()
+    tempGui.SetFont("s12 w700", "Bahnschrift")
+    tempText := tempGui.Add("Text", "", txt)
+    tempText.GetPos(,, &tw)
+    tempGui.Destroy()
+    
+    ; 2. CALCULATION
+    newWidth := tw + padding
+    xPos := (A_ScreenWidth / 2) - (newWidth / 2)
+    
+    ; 3. UPDATE HUD VALUES
     HUD.BackColor := color
     HUDText.Value := txt
-    HUD.Show("x" xPos " y0 w" guiWidth " NoActivate")
+    HUDText.Opt("+Center")
+    
+    ; 4. PRECISION POSITIONING
+    ; We set the control height slightly lower than the window (30 vs 35)
+    ; and use y4 to push it down so the font's "baseline" sits in the middle.
+    HUDText.Move(0, 4, newWidth, 30)
+    
+    ; 5. DISPLAY
+    HUD.Show("x" xPos " y0 w" newWidth " h35 NoActivate")
 }
 
-; Feedback HUD
+ShowHUD(txt, color) {
+    if (isFlashing)
+        return
+    UpdateHUD(txt, color)
+}
+
 FlashHUD(txt, color) {
-    xPos := (A_ScreenWidth / 2) - (guiWidth / 2)
-    HUD.BackColor := color
-    HUDText.Value := txt
-    HUD.Show("x" xPos " y0 w" guiWidth " NoActivate")
-    SetTimer () => HUD.Hide(), -1000 
+    global isFlashing := true 
+    UpdateHUD(txt, color)
+    SetTimer(HideFlash, -1000) ; Display for 1 second
+}
+
+HideFlash() {
+    global isFlashing, HUD
+    isFlashing := false
+    HUD.Hide()
 }
 
 ; ##########################################
@@ -112,6 +147,7 @@ $+F18::
         }
     }
 }
+
 ; Shift + F19: Smart Explorer
 $+F19::
 {
@@ -231,21 +267,9 @@ $+F18:: ; Smart YouTube
         Run "firefox.exe https://www.youtube.com"
 }
 
-; --- EMPTY SLOTS LAYER 2 ---
-$+F19::
-{
-    FlashHUD("EMPTY", "8B0000")
-}
-
-$+F20::
-{
-    FlashHUD("EMPTY", "8B0000")
-}
-
-$+F21::
-{
-    FlashHUD("EMPTY", "8B0000")
-}
+$+F19:: FlashHUD("EMPTY", "8B0000")
+$+F20:: FlashHUD("EMPTY", "8B0000")
+$+F21:: FlashHUD("EMPTY", "8B0000")
 
 #HotIf
 
@@ -290,13 +314,13 @@ $+F15:: ; PiP Toggle
     }
 }
 
-$+F16:: ; Smart Explorer - ARMA
+$+F16:: ; Smart Explorer - Music
 {
-    FlashHUD("FOLDER: ARMA PROJECT", "7B904B")
-    if WinExist("Arma ahk_class CabinetWClass")
+    FlashHUD("FOLDER: MUSIC", "7B904B")
+    if WinExist("Musik ahk_class CabinetWClass") || WinExist("Music ahk_class CabinetWClass")
         WinActivate
-    else
-        Run 'explorer.exe "G:\Arma"'
+    else 
+        Run "explorer.exe shell:My Music"
 }
 
 $+F17:: ; Same-App-Hopper
@@ -330,21 +354,9 @@ $+F18:: ; Copy Current Explorer Path
     }
 }
 
-; --- EMPTY SLOTS LAYER 3 ---
-$+F19::
-{
-    FlashHUD("EMPTY", "8B0000")
-}
-
-$+F20::
-{
-    FlashHUD("EMPTY", "8B0000")
-}
-
-$+F21::
-{
-    FlashHUD("EMPTY", "8B0000")
-}
+$+F19:: FlashHUD("EMPTY", "8B0000")
+$+F20:: FlashHUD("EMPTY", "8B0000")
+$+F21:: FlashHUD("EMPTY", "8B0000")
 
 #HotIf
 
@@ -354,14 +366,16 @@ $+F21::
 
 *F23::
 {
-    ShowHUD("LAYER 2: THIRDS", "005A9E")
+    ShowHUD("LAYER 2", "005A9E")
     KeyWait "F23"
-    HUD.Hide()
+    if (!isFlashing)
+        HUD.Hide()
 }
 
 *F24::
 {
-    ShowHUD("LAYER 3: POWER", "D4A017")
+    ShowHUD("LAYER 3", "D4A017")
     KeyWait "F24"
-    HUD.Hide()
+    if (!isFlashing)
+        HUD.Hide()
 }
