@@ -1,21 +1,23 @@
-# Work in Progress (This script is not yet 100% feature complete)
-Powerful Autohotkey script to convert any VIA/QMK programmable Numpad into a powerful Macropad. 
+# EK21 MacroMaster (AutoHotkey v2 (Work in Progress))
 
-# Epomaker Ek21 Setup
+Powerful AutoHotkey script to convert any VIA/QMK programmable Numpad (like the Epomaker EK21) into a professional Macropad.
 
-The Auhothotkey (https://www.autohotkey.com/) script listens to the Shift + F function key combos (F13-F21) and F23 and F24 as layer modifier.
-Just remap the buttons via the ANY feature of VIA/QMK and insert the keycodes for each button (https://docs.keeb.io/via)
-  
-    S(KC_F13)
-    S(KC_F14)
-    .....
+
+## 🛠 Setup & Requirements
+
+1. **Install:** [AutoHotkey v2](https://www.autohotkey.com/)
+2. **VIA/QMK Configuration:** Remap your Numpad buttons using the **ANY** feature in VIA with the following keycodes:
+   - `S(KC_F13)` through `S(KC_F21)` for main actions.
+   - `KC_F23` and `KC_F24` as layer modifiers.
 
 <img width="307" height="433" alt="grafik" src="https://github.com/user-attachments/assets/4136e4bb-0435-420a-a2af-eb686ea4613d" />
 
-# Current functions
-<img width="730" height="818" alt="grafik" src="https://github.com/user-attachments/assets/72f8dd19-ecae-40d1-b08e-39eb6507da9f" />
 
-* Window Management: Currently It's designed for 1440p monitors, if you run a different res you need to change some numbers.
+## 🚀 Key Features
+- **Tri-Layer Logic:** Standard actions + 2 modifier layers (F23/F24).
+- **Smart Window Management:** Optimized for 1440p (Left/Right halves & thirds).
+- **App Control:** Context-aware closing, foobar2000 integration, and browser shortcuts.
+<img width="730" height="818" alt="grafik" src="https://github.com/user-attachments/assets/72f8dd19-ecae-40d1-b08e-39eb6507da9f" />
 
 # Epomaker EK21 Makropad Example
 <img width="477" height="575" alt="grafik" src="https://github.com/user-attachments/assets/15f53741-a4f1-460f-84cd-67c8659ef35c" />
