@@ -23,33 +23,35 @@ global HUDText := HUD.Add("Text", "Center -Wrap", "")
 global isFlashing := false
 global padding := 60 ; Perfect horizontal balance
 
-UpdateHUD(txt, color) {
+UpdateHUD(txt, color, tColor := "Black") {
     global HUD, HUDText, padding
     
     ; 1. VIRTUAL MEASUREMENT
-    ; Bypass v2 sizing cache by measuring text in a temporary GUI
     tempGui := Gui()
     tempGui.SetFont("s12 w700", "Bahnschrift")
     tempText := tempGui.Add("Text", "", txt)
     tempText.GetPos(,, &tw)
     tempGui.Destroy()
     
-    ; 2. DIMENSION CALCULATION
+    ; 2. CALCULATION
     newWidth := tw + padding
     xPos := (A_ScreenWidth / 2) - (newWidth / 2)
     
-    ; 3. UPDATE HUD VALUES
+    ; 3. UPDATE HUD VALUES & COLORS
     HUD.BackColor := color
+    HUDText.Opt("c" . tColor . " +Center") ; Setzt Textfarbe dynamisch
     HUDText.Value := txt
-    HUDText.Opt("+Center") ; Ensure text is centered within the control
     
-    ; 4. OCD-PRECISION POSITIONING
-    ; y3 and h24 perfectly balance the Bahnschrift font vertically
+    ; 4. POSITIONING
     HUDText.Move(0, 3, newWidth, 24)
     
-    ; 5. DISPLAY
-    ; h28 height for a sleek, minimal notification bar
+    ; 5. DISPLAY & FORCE TOPMOST
+    ; "NoActivate" verhindert Fokusverlust, "AlwaysOnTop" erzwingt Vordergrund
+    HUD.Opt("+AlwaysOnTop") 
     HUD.Show("x" xPos " y0 w" newWidth " h28 NoActivate")
+    
+    ; Extra-Sicherung: Erzwingt die Ebene über WinSet
+    WinSetAlwaysOnTop 1, "ahk_id " HUD.Hwnd
 }
 
 ShowHUD(txt, color) {
