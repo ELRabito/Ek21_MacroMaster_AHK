@@ -46,7 +46,6 @@ UpdateHUD(txt, color, tColor := "Black") {
     HUDText.Move(0, 3, newWidth, 24)
     
     ; 5. DISPLAY & FORCE TOPMOST
-    ; "NoActivate" verhindert Fokusverlust, "AlwaysOnTop" erzwingt Vordergrund
     HUD.Opt("+AlwaysOnTop") 
     HUD.Show("x" xPos " y0 w" newWidth " h28 NoActivate")
     
