@@ -13,7 +13,7 @@ SetTitleMatchMode 2
 #UseHook
 
 ; ##########################################
-; HUD SYSTEM - OCD PRECISION EDITION (v2.4)
+; HUD SYSTEM - OCD PRECISION EDITION
 ; ##########################################
 
 global HUD := Gui("+AlwaysOnTop -Caption +ToolWindow")
@@ -60,9 +60,10 @@ HideFlash() {
 }
 
 ; ##########################################
-; LAYER 1: NORMAL
+; LAYER 1: NORMAL (NO MODIFIER)
 ; ##########################################
 
+; F13: Snap Window to Left Half
 $+F13:: {
     halfW := A_ScreenWidth / 2
     WinRestore "A"
@@ -70,11 +71,13 @@ $+F13:: {
     FlashHUD("SNAP: LEFT HALF", "00cc33")
 }
 
+; F14: Maximize Window
 $+F14:: {
     WinMaximize "A"
     FlashHUD("WINDOW: MAXIMIZED", "00cc33")
 }
 
+; F15: Snap Window to Right Half
 $+F15:: {
     halfW := A_ScreenWidth / 2
     WinRestore "A"
@@ -82,6 +85,7 @@ $+F15:: {
     FlashHUD("SNAP: RIGHT HALF", "00cc33")
 }
 
+; F16: Toggle Window Transparency (Ghost Mode)
 $+F16:: {
     try {
         currentTrans := WinGetTransparent("A")
@@ -94,6 +98,7 @@ $+F16:: {
     }
 }
 
+; F17: Smart Close (Tab or Window)
 $+F17:: {
     activeProcess := WinGetProcessName("A")
     FlashHUD("Closed", "8B0000")
@@ -105,6 +110,7 @@ $+F17:: {
         WinClose "A"
 }
 
+; F18: Launch or Focus Foobar2000
 $+F18:: {
     FlashHUD("APP: FOOBAR2000", "2E8B57")
     if WinExist("ahk_exe foobar2000.exe") {
@@ -122,6 +128,7 @@ $+F18:: {
     }
 }
 
+; F19: Smart Explorer (1 = Open, 2 = 50/50, 3 = Triple Tile)
 $+F19:: {
     ids := WinGetList("ahk_class CabinetWClass")
     count := ids.Length
@@ -163,6 +170,7 @@ $+F19:: {
     }
 }
 
+; F20: Google Search Selected Text
 $+F20:: {
     A_Clipboard := ""
     Send "^c"
@@ -176,6 +184,7 @@ $+F20:: {
     }
 }
 
+; F21: Open Downloads Folder
 $+F21:: {
     FlashHUD("FOLDER: DOWNLOADS", "0078D7")
     if WinExist("Downloads ahk_class CabinetWClass")
@@ -185,11 +194,12 @@ $+F21:: {
 }
 
 ; ##########################################
-; LAYER 2: F23-MODIFIER
+; LAYER 2: F23-MODIFIER (BLUE)
 ; ##########################################
 
 #HotIf GetKeyState("F23", "P")
 
+; F13: Snap Window to Left Third
 $+F13:: {
     thirdW := A_ScreenWidth / 3
     WinRestore "A"
@@ -197,6 +207,7 @@ $+F13:: {
     FlashHUD("SNAP: LEFT THIRD", "005A9E")
 }
 
+; F14: Snap Window to Center Third
 $+F14:: {
     thirdW := A_ScreenWidth / 3
     WinRestore "A"
@@ -204,6 +215,7 @@ $+F14:: {
     FlashHUD("SNAP: CENTER THIRD", "005A9E")
 }
 
+; F15: Snap Window to Right Third
 $+F15:: {
     thirdW := A_ScreenWidth / 3
     WinRestore "A"
@@ -211,6 +223,7 @@ $+F15:: {
     FlashHUD("SNAP: RIGHT THIRD", "005A9E")
 }
 
+; F16: Explorer Filter (Search Selected Text in Explorer)
 $+F16:: {
     A_Clipboard := ""
     Send "^c"
@@ -245,6 +258,7 @@ $+F16:: {
     }
 }
 
+; F17: Open Music Folder
 $+F17:: {
     FlashHUD("FOLDER: MUSIC", "7B904B")
     if WinExist("Musik ahk_class CabinetWClass") || WinExist("Music ahk_class CabinetWClass")
@@ -253,6 +267,7 @@ $+F17:: {
         Run "explorer.exe shell:My Music"
 }
 
+; F18: Window Hopper (Rotate between instances of same app)
 $+F18:: {
     activeProc := WinGetProcessName("A")
     FlashHUD("HOP: " . activeProc, "D4A017")
@@ -271,6 +286,7 @@ $+F18:: {
     }
 }
 
+; F19: Copy Current Path from Explorer
 $+F19:: {
     if WinActive("ahk_class CabinetWClass") {
         Send "^l"
@@ -290,11 +306,12 @@ $+F21:: FlashHUD("EMPTY", "8B0000")
 #HotIf
 
 ; ##########################################
-; LAYER 3: F24-MODIFIER
+; LAYER 3: F24-MODIFIER (GOLD)
 ; ##########################################
 
 #HotIf GetKeyState("F24", "P")
 
+; F13: Center Window at 75% Scale
 $+F13:: {
     w := A_ScreenWidth * 0.75
     h := A_ScreenHeight * 0.75
@@ -303,6 +320,7 @@ $+F13:: {
     FlashHUD("MODE: CENTER 75%", "D4A017")
 }
 
+; F14: Focus Mode (Center 90%)
 $+F14:: {
     w := A_ScreenWidth * 0.90
     h := A_ScreenHeight * 0.90
@@ -311,6 +329,7 @@ $+F14:: {
     FlashHUD("MODE: FOCUS 90%", "D4A017")
 }
 
+; F15: Toggle Picture-in-Picture Mode (Top-Right)
 $+F15:: {
     pipW := A_ScreenWidth * 0.25
     pipH := A_ScreenHeight * 0.25
@@ -337,7 +356,7 @@ $+F21:: FlashHUD("EMPTY", "8B0000")
 #HotIf
 
 ; ##########################################
-; HELPERS & MODIFIER
+; HELPERS & MODIFIER LOGIC
 ; ##########################################
 
 ; COMBO: F23 + F24 -> Macro Overview
@@ -371,7 +390,7 @@ $+F21:: FlashHUD("EMPTY", "8B0000")
     HUD.Hide()
 }
 
-; Modifier 1 (Layer 2)
+; Modifier 1 (Layer 2) Visuals
 ~*F23::
 {
     Sleep 70 
@@ -384,7 +403,7 @@ $+F21:: FlashHUD("EMPTY", "8B0000")
         HUD.Hide()
 }
 
-; Modifier 2 (Layer 3)
+; Modifier 2 (Layer 3) Visuals
 ~*F24::
 {
     Sleep 70
